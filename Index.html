@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ajax API stuffs</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+    $(document).ready(function(){
+
+
+        $('button:eq(1)').click(function(){
+            var newVal = $('input[name="city-name"]').val() + ", " + $('input[name="state"]').val();
+
+            $('select').append('<option>' + newVal + '</option>');
+        });
+        $('button:eq(0)').click(function(){
+            var cityState = $('select option:selected').val();
+            //var state = 
+            var url = "http://api.openweathermap.org/data/2.5/weather?q=" + cityState +  "&units=imperial&appid=bb63d9d5c2a467f955030ce9916a522d";       
+
+            $.get(url, function(res){
+            console.log(res);
+            var temp = Math.round(res.main.temp);
+            var wind = res.wind.speed;
+            var direction = res.wind.deg;
+ 
+
+            var date = new Date(res.dt * 1000); 
+            var output = '<div class="card">\n\t<span class="close">X</span>\n\t<h4>' + cityState + '</h4>\n\t<h4>Tempature: '+ temp + ' &#8457;</h4>\n\t<h4>Wind Speed: '+ wind + ' m/s</h4>\n\t<h4>direction: ' + direction + '</h4>\n\t<h5>Date: ' + date + '</h5>\n</div>'
+
+            $('#saved-cities').append(output);
+
+            $('.close').click(function(){
+
+              $(this).parent().remove();
+            });
+
+          });
+
+        });
+        
+    });
+    
+
+  </script>
+</head>
+<body>
+<header>
+  <img id="logo" src="logo.jpg" alt="poodle">
+  <div id="name-box">
+    <h1>Ajax Weather Site</h1>
+    <h3>we put the where in wherether.</h3>
+  </div>
+</header>
+
+<div class="container-fluid">
+  <div class="booking-section section-1">
+    <div class="section-header">
+    </div>
+    <div class="left">
+      <h4>Saved Cities</h4>
+      <select name="saved-cities">
+        <option id="initial" name=""></option>
+      <select><br>
+      <button id="get-weather" class="btn-primary">Get Weather</button>
+      <h4>City name</h4>
+      <input type="text" name="city-name" placeholder="City">
+      <h4>State name</h4>
+      <input type="text" name="state" placeholder="state"><br>
+      <button class="btn-primary">Add to Saved Cities</button>
+    </div>
+    <div class="right">
+      <h1>Saved Cities</h1>
+      <div id="saved-cities"></div>
+    </div>
+  </div>
+
+
+</div>  <!-- end of container --> 
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>
